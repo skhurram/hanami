@@ -17,3 +17,14 @@
          (if-let [[user pass] (some-> uri .getUserInfo (str/split #":"))]
            (str "?user="     (URLEncoder/encode user)
                 "&password=" (URLEncoder/encode pass))))))
+
+(defmethod jdbc-uri :mysql [uri]
+  (let [uri (URI. uri)]
+    (str "jdbc:mysql://"
+         (.getHost uri)
+         (if (not= (.getPort uri) -1)
+           (str ":" (.getPort uri)))
+         (.getPath uri)
+         (if-let [[user pass] (some-> uri .getUserInfo (str/split #":"))]
+           (str "?user="     (URLEncoder/encode user)
+                "&password=" (URLEncoder/encode pass))))))
